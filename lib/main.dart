@@ -1,12 +1,9 @@
 import 'package:facebok/Security/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
-import 'Pages/Home_page.dart';
-import 'Pages/postfunction.dart';
-import 'chatspage.dart';
-import 'Pages/create_post.dart';
-import 'Pages/friendpage.dart';
+import 'Pages/MENU/morepage.dart';
+import 'Pages/chat/chatspage.dart';
+import 'Pages/FRIENDS/friendpage.dart';
 import 'Pages/mainpage.dart' hide HomePageContent;
 import 'Security/1sign.dart';
 import 'Security/forgetpassword.dart';
@@ -30,7 +27,7 @@ class MyApp extends StatelessWidget {
 
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: home_pages(),
+      home: Mainpage(),
     );
   }
 }

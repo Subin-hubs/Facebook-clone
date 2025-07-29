@@ -1,11 +1,10 @@
+import 'package:facebok/Pages/HOME/Home_page.dart';
 import 'package:flutter/material.dart';
-
-import 'Home_page.dart';
-import 'Reels.dart';
-import 'friendpage.dart';
-import 'marketplacepage.dart';
-import 'morepage.dart';
-import 'notificatationpage.dart';
+import 'REELS/Reels.dart';
+import 'FRIENDS/friendpage.dart';
+import 'MARKET/marketplacepage.dart';
+import 'MENU/morepage.dart';
+import 'NOTIFICATATION/notificatationpage.dart';
 
 class Mainpage extends StatefulWidget {
   const Mainpage({super.key});
@@ -19,7 +18,7 @@ class _MainpageState extends State<Mainpage> {
   final PageController _pageController = PageController();
 
   final List<Widget> pages = const [
-    home_pages(),
+    HomePages(),
     reels(),
     friends(),
     marketplace(),

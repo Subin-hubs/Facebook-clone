@@ -8,7 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../Pages/Home_page.dart';
+import '../Pages/HOME/Home_page.dart';
+import '../Pages/mainpage.dart';
 
 class loginPage extends StatefulWidget {
   const loginPage({super.key});
@@ -58,7 +59,7 @@ class _loginPageState extends State<loginPage> {
       Fluttertoast.showToast(msg: "Login successful");
 
       if (_tabTextIndexSelected == 0) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => home_pages()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Mainpage()));
       } else {
 
       }

@@ -4,9 +4,7 @@ import 'package:facebok/Security/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
-import '../Pages/Home_page.dart';
-import '../Pages/create_post.dart';
+import '../Pages/HOME/Home_page.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -24,7 +22,6 @@ class _SignupPageState extends State<SignupPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // 🔁 Generates friend suggestions after signup
   Future<void> generateFriendSuggestions(String uid) async {
     final newUserDoc = _firestore.collection('users').doc(uid);
     final allUsers = await _firestore.collection('users').get();
@@ -82,7 +79,7 @@ class _SignupPageState extends State<SignupPage> {
         Fluttertoast.showToast(msg: "Account created successfully");
 
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => home_pages()));
+            context, MaterialPageRoute(builder: (context) => Mainpage()));
       }
     } catch (e, stacktrace) {
       print("Registration error: $e");
