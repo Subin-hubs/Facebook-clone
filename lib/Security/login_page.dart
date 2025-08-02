@@ -24,7 +24,7 @@ class _loginPageState extends State<loginPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   bool isLoading = false;
-  int _tabTextIndexSelected = 0; // Change based on user type selection (optional)
+  int _tabTextIndexSelected = 0; 
 
   Future<User?> loginUser() async {
     SharedPreferences _pref = await SharedPreferences.getInstance();
