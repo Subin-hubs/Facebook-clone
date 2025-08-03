@@ -1,12 +1,14 @@
 import 'package:facebok/Security/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'Pages/HOME/Home_page.dart';
 import 'Pages/MENU/morepage.dart';
 import 'Pages/chat/chatspage.dart';
 import 'Pages/FRIENDS/friendpage.dart';
 import 'Pages/mainpage.dart' hide HomePageContent;
 import 'Security/1sign.dart';
 import 'Security/forgetpassword.dart';
+import 'Security/photo.dart';
 import 'Security/signupPage.dart';
 
 void main()async {

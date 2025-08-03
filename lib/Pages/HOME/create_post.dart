@@ -21,7 +21,7 @@ class _CreatePostState extends State<CreatePost> {
 
   String? base64Image;
 
-  // 🧠 Pick and compress image, convert to base64
+
   Future<void> pickImage(ImageSource source) async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: source, imageQuality: 70);

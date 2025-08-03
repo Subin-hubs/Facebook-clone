@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:facebok/Pages/HOME/widgets/story.dart';
 import 'package:facebok/Pages/chat/chatspage.dart';
@@ -20,7 +19,6 @@ class HomePages extends StatefulWidget {
 }
 
 class _HomePagesState extends State<HomePages> {
-  String currentUserId = "ziLUSzisNnViB8vO2iDPEFd8zgf1";
 
   String formatTimestamp(Timestamp timestamp) {
     DateTime dateTime = timestamp.toDate();
@@ -41,39 +39,53 @@ class _HomePagesState extends State<HomePages> {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  List a= ["1","2","3"];
-  Future<void> Like(String postId,int currentLikeCount,bool liked,List likedByUserId,String postsUserId) async {
-   try{
-     final user = _auth.currentUser;
-     log("got list"+likedByUserId.toString());
-     log("got list"+user.toString());
-     final postsRef = _firestore
-         .collection('users')
-         .doc(postsUserId)
-         .collection('posts')
-         .doc(postId);
-     List finalLikedByUsersId = [];
-     if(likedByUserId.length==0){
-       finalLikedByUsersId.add(user!.uid);
-     }else{
-       for(int i =0;i<likedByUserId.length;i++){
-         finalLikedByUsersId.add(likedByUserId[i]);
-         if(liked==true){
-           finalLikedByUsersId.remove(user!.uid);
-         }else{
-           finalLikedByUsersId.add(user!.uid);
-         }
-       }
-     }
-     await postsRef.update({
-       'likes': liked==true?currentLikeCount-1:currentLikeCount + 1,
-       'likedBy':finalLikedByUsersId
-     });
-   }catch(e){
-     print(e);
-   }
-  }
 
+  Future<void> Like(String postId, int currentLikeCount, bool liked,
+      List likedByUserId, String postsUserId) async {
+    try {
+      final user = _auth.currentUser;
+      final postsRef = _firestore
+          .collection('users')
+          .doc(postsUserId)
+          .collection('posts')
+          .doc(postId);
+      List finalLikedByUsersId = [];
+
+      if (likedByUserId.isEmpty) {
+        finalLikedByUsersId.add(user!.uid);
+      } else {
+        for (int i = 0; i < likedByUserId.length; i++) {
+          finalLikedByUsersId.add(likedByUserId[i]);
+          if (liked == true) {
+            finalLikedByUsersId.remove(user!.uid);
+          } else {
+            finalLikedByUsersId.add(user!.uid);
+          }
+        }
+      }
+      await postsRef.update({
+        'likes': liked == true ? currentLikeCount - 1 : currentLikeCount + 1,
+        'likedBy': finalLikedByUsersId
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+  Future<int> fetchLikes(String userId, String postID) async {
+    DocumentSnapshot postDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('posts')
+        .doc(postID)
+        .get();
+
+    if (postDoc.exists) {
+      final data = postDoc.data() as Map<String, dynamic>;
+      return data['likes'] ?? 0; //Display 0
+    }
+
+    return 0;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,15 +116,19 @@ class _HomePagesState extends State<HomePages> {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (_) => CreatePost()));
                       },
-                      child: Image.asset("assests/add.png", height: 40, width: 40),
+                      child: Image.asset("assests/add.png",
+                          height: 40, width: 40),
                     ),
                     SizedBox(width: 10),
                     Image.asset("assests/copy.png", height: 25, width: 25),
                     SizedBox(width: 10),
-                    GestureDetector(onTap:(){
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => chats()));
-                    },child: Image.asset("assests/messanger.png", height: 20, width: 25)),
+                    GestureDetector(
+                        onTap: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (_) => chats()));
+                        },
+                        child: Image.asset("assests/messanger.png",
+                            height: 20, width: 25)),
                     SizedBox(width: 10),
                   ],
                 ),
@@ -121,7 +137,8 @@ class _HomePagesState extends State<HomePages> {
 
             const SizedBox(height: 15),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              padding:
+              const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               child: Row(
                 children: [
                   const SizedBox(width: 10),
@@ -182,17 +199,18 @@ class _HomePagesState extends State<HomePages> {
                       final post = posts[index];
                       List likedByUsersId = [];
 
-                     if(post['likedBy'].length==0){}else{
-                       for(int i =0;i<post['likedBy'].length;i++){
-
-                         if(likedByUsersId.contains(post['likedBy'][i])){}else{
+                      if (post['likedBy'].length != 0) {
+                        for (int i = 0; i < post['likedBy'].length; i++) {
+                          if (!likedByUsersId
+                              .contains(post['likedBy'][i])) {
                             likedByUsersId.add(post['likedBy'][i]);
-                         }
+                          }
+                        }
+                      }
 
-                       }
-                     }
-                      bool liked = likedByUsersId.contains(_auth.currentUser!.uid);
-                     log(liked.toString());
+                      bool liked = likedByUsersId
+                          .contains(_auth.currentUser!.uid);
+                      log(liked.toString());
                       final text = post['text'] ?? '';
                       final image = post['image'];
                       final timestamp = post['timestamp'] as Timestamp?;
@@ -201,20 +219,24 @@ class _HomePagesState extends State<HomePages> {
                       return FutureBuilder<Map<String, dynamic>>(
                         future: fetchUserData(userId),
                         builder: (context, userSnapshot) {
-                          if (userSnapshot.connectionState == ConnectionState.waiting) {
+                          if (userSnapshot.connectionState ==
+                              ConnectionState.waiting) {
                             return Center(child: CircularProgressIndicator());
                           }
 
                           if (userSnapshot.hasError) {
-                            return const Center(child: Text("Error fetching user data"));
+                            return const Center(
+                                child: Text("Error fetching user data"));
                           }
 
                           final userData = userSnapshot.data ?? {};
                           final userName = userData['fname'] ?? 'Anonymous';
-                          final profilePic = userData['profile_picture'] ?? '';
+                          final profilePic =
+                              userData['profile_picture'] ?? '';
 
                           return Card(
-                            margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 8),
                             elevation: 3,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12)),
@@ -225,13 +247,15 @@ class _HomePagesState extends State<HomePages> {
                                 children: [
                                   Row(
                                     children: [
-                                      // CircleAvatar(
-                                      //   radius: 20,
-                                      //   backgroundImage: profilePic.isNotEmpty
-                                      //       ? NetworkImage(profilePic)
-                                      //       : const AssetImage('assets/default_profile.png') as ImageProvider,
-                                      // ),
-                                      const SizedBox(width: 10),
+                                      CircleAvatar(
+                                        radius: 20,
+                                        backgroundImage: profilePic.isNotEmpty
+                                            ? NetworkImage(profilePic)
+                                            : const AssetImage(
+                                            'assests/defaultimg.png')
+                                        as ImageProvider,
+                                      ),
+                                      SizedBox(width: 10),
                                       Text(
                                         userName,
                                         style: const TextStyle(
@@ -256,11 +280,13 @@ class _HomePagesState extends State<HomePages> {
                                   Text(
                                     text,
                                     style: const TextStyle(
-                                        fontSize: 16, fontWeight: FontWeight.w500),
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500),
                                   ),
                                   const SizedBox(height: 10),
 
-                                  if (image != null && image.toString().isNotEmpty)
+                                  if (image != null &&
+                                      image.toString().isNotEmpty)
                                     ClipRRect(
                                       borderRadius: BorderRadius.circular(8),
                                       child: Image.memory(
@@ -268,17 +294,35 @@ class _HomePagesState extends State<HomePages> {
                                         fit: BoxFit.cover,
                                       ),
                                     ),
+                                  Text(
+                                    "${post['likes']} ${post['likes'] == 1 ? 'Like' : ''}",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey[800],
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
                                   Padding(
                                     padding: const EdgeInsets.only(top: 10),
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children:  [
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                      children: [
                                         GestureDetector(
                                           onTap: () {
-                                              log(likedByUsersId.toString());
-                                            Like(post.id,post['likes'],liked,likedByUsersId,post['userId']);
+                                            Like(
+                                                post.id,
+                                                post['likes'],
+                                                liked,
+                                                likedByUsersId,
+                                                post['userId']);
                                           },
-                                            child: Icon(Icons.thumb_up_alt_rounded,color:liked==true? Colors.blueAccent:Colors.red,),
+                                          child: Icon(
+                                            Icons.thumb_up_alt_rounded,
+                                            color: liked
+                                                ? Colors.blueAccent
+                                                : Colors.red,
+                                          ),
                                         ),
                                         Icon(Icons.comment),
                                         Icon(Icons.ios_share_outlined),
