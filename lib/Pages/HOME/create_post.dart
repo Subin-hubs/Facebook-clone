@@ -77,7 +77,7 @@ class _CreatePostState extends State<CreatePost> {
     );
 
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => Mainpage()));
+        context, MaterialPageRoute(builder: (context) => Mainpage(0,false)));
   }
 
   @override

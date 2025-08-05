@@ -1,6 +1,10 @@
-import 'package:facebok/Security/login_page.dart';
+import 'dart:convert';
+
+import 'package:facebok/Pages/mainpage.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:facebok/Security/login_page.dart';
 import 'package:facebok/Pages/HOME/Home_page.dart';
 import 'package:facebok/Pages/REELS/Reels.dart';
 
@@ -21,12 +25,13 @@ class _moreState extends State<more> {
   }
 
   Future<void> loadUserData() async {
-    final uid = "ziLUSzisNnViB8vO2iDPEFd8zgf1";
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => loginPage()));
+      return;
+    }
     try {
-      final doc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(uid)
-          .get();
+      final doc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
       if (doc.exists) {
         setState(() {
           userData = doc.data();
@@ -72,14 +77,16 @@ class _moreState extends State<more> {
                 children: [
                   CircleAvatar(
                     radius: 28,
-                    backgroundImage: NetworkImage(userData!['photoUrl']),
+                    backgroundImage: userData!['ppimage'] != null
+                        ? MemoryImage(base64Decode(userData!['ppimage']))
+                        : AssetImage("assests/defaultimg.png") as ImageProvider,
                   ),
                   SizedBox(width: 12),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "${userData!['fname']} ${userData!['lname']}",
+                        "${userData!['fname'] ?? 'First'} ${userData!['lname'] ?? 'Last'}",
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
@@ -109,17 +116,17 @@ class _moreState extends State<more> {
                   MenuButton(
                     icon: Icons.home_outlined,
                     label: "Home",
-                    onTap: () => Navigator.push(
+                    onTap: () => Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (_) => HomePages()),
+                      MaterialPageRoute(builder: (_) => Mainpage(0,false)),
                     ),
                   ),
                   MenuButton(
                     icon: Icons.movie_outlined,
                     label: "Reels",
-                    onTap: () => Navigator.push(
+                    onTap: () => Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (_) => reels()),
+                      MaterialPageRoute(builder: (_) => Mainpage(1,true)),
                     ),
                   ),
                   MenuButton(
@@ -142,6 +149,7 @@ class _moreState extends State<more> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
+                    FirebaseAuth.instance.signOut();
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(builder: (_) => loginPage()),

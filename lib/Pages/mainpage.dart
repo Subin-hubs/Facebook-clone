@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:facebok/Pages/HOME/Home_page.dart';
 import 'package:flutter/material.dart';
 import 'REELS/Reels.dart';
@@ -7,7 +9,9 @@ import 'MENU/morepage.dart';
 import 'NOTIFICATATION/notificatationpage.dart';
 
 class Mainpage extends StatefulWidget {
-  const Mainpage({super.key});
+  int currentIndex;
+  bool navigation;
+   Mainpage(this.currentIndex,this.navigation);
 
   @override
   State<Mainpage> createState() => _MainpageState();
@@ -15,8 +19,19 @@ class Mainpage extends StatefulWidget {
 
 class _MainpageState extends State<Mainpage> {
   int _currentIndex = 0;
-  final PageController _pageController = PageController();
-
+  bool navigation = false;
+  late PageController _pageController = PageController();
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+      _currentIndex= widget.currentIndex;
+      navigation = widget.navigation;
+   if(navigation==true)
+     _pageController = PageController(
+      initialPage: widget.currentIndex,
+    );
+  }
   final List<Widget> pages = const [
     HomePages(),
     reels(),
@@ -26,12 +41,20 @@ class _MainpageState extends State<Mainpage> {
     more(),
   ];
 
-  void _onTabTapped(int index) {
+   _onTabTapped(int index) {
+    log(index.toString());
     setState(() {
-      _currentIndex = index;
+    _currentIndex = index;
+    navigation==true?
+        index = widget.currentIndex:null;
     });
-    _pageController.animateToPage(index,
+ _pageController.animateToPage(index,
         duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+
+  setState(() {
+    navigation = false;
+  });
+
   }
 
   @override

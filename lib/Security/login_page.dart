@@ -59,7 +59,7 @@ class _loginPageState extends State<loginPage> {
       Fluttertoast.showToast(msg: "Login successful");
 
       if (_tabTextIndexSelected == 0) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Mainpage()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Mainpage(0,false)));
       } else {
 
       }
@@ -83,88 +83,88 @@ class _loginPageState extends State<loginPage> {
       backgroundColor: CupertinoColors.white,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 200),
-              Center(
-                child: Image.asset("assests/facebookicon.png", height: 60, width: 60),
-              ),
-              const SizedBox(height: 90),
-              TextFormField(
-                controller: emailController,
-                decoration: InputDecoration(
-                  hintText: "Mobile number or email",
-                  filled: true,
-                  fillColor: Colors.grey.shade100,
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: const BorderSide(color: Colors.grey),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: const BorderSide(color: Colors.grey),
-                  ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 100),
+            Center(
+              child: Image.asset("assests/facebookicon.png", height: 60, width: 60),
+            ),
+            const SizedBox(height: 90),
+            TextFormField(
+              controller: emailController,
+              decoration: InputDecoration(
+                hintText: "Mobile number or email",
+                filled: true,
+                fillColor: Colors.grey.shade100,
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  borderSide: const BorderSide(color: Colors.grey),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  borderSide: const BorderSide(color: Colors.grey),
                 ),
               ),
-              const SizedBox(height: 10),
-              TextFormField(
-                controller: passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  hintText: "Password",
-                  filled: true,
-                  fillColor: Colors.grey.shade100,
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: const BorderSide(color: Colors.grey),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: const BorderSide(color: Colors.grey),
-                  ),
+            ),
+            const SizedBox(height: 10),
+            TextFormField(
+              controller: passwordController,
+              obscureText: true,
+              decoration: InputDecoration(
+                hintText: "Password",
+                filled: true,
+                fillColor: Colors.grey.shade100,
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  borderSide: const BorderSide(color: Colors.grey),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  borderSide: const BorderSide(color: Colors.grey),
                 ),
               ),
-              const SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: loginUser,
+            ),
+            const SizedBox(height: 20),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: loginUser,
 
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueAccent.shade400,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blueAccent.shade400,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                  child: isLoading
-                      ? const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 12),
-                    child: CircularProgressIndicator(color: Colors.white),
-                  )
-                      : const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 12),
-                    child: Text(
-                      "Log in",
-                      style: TextStyle(color: Colors.white, fontSize: 14),
-                    ),
+                ),
+                child: isLoading
+                    ? const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 12),
+                  child: CircularProgressIndicator(color: Colors.white),
+                )
+                    : const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 12),
+                  child: Text(
+                    "Log in",
+                    style: TextStyle(color: Colors.white, fontSize: 14),
                   ),
                 ),
               ),
-              Center(
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const forgetPassword()));
-                  },
-                  child: const Text(
-                    "Forgot password?",
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                  ),
+            ),
+            Center(
+              child: TextButton(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const forgetPassword()));
+                },
+                child: const Text(
+                  "Forgot password?",
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
               ),
-              SizedBox(height: MediaQuery.of(context).size.height/4,),
-              SizedBox(
+            ),
+            SizedBox(height: MediaQuery.of(context).size.height/6,),
+            Expanded(
+              child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
@@ -189,10 +189,10 @@ class _loginPageState extends State<loginPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
-              const Center(child: Text("Meta", style: TextStyle(color: Colors.grey))),
-            ],
-          ),
+            ),
+            const SizedBox(height: 10),
+            const Center(child: Text("Meta", style: TextStyle(color: Colors.grey))),
+          ],
         ),
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:facebok/Pages/mainpage.dart';
 import 'package:facebok/Security/login_page.dart';
+import 'package:facebok/Security/photo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -70,7 +71,6 @@ class _SignupPageState extends State<SignupPage> {
           'fname': fname.text,
           'lname': lname.text,
           'email': user.email,
-          'photoUrl': 'https://i.pravatar.cc/150?u=${user.uid}', // optional avatar
           'mutualFriends': [],
         });
 
@@ -79,7 +79,7 @@ class _SignupPageState extends State<SignupPage> {
         Fluttertoast.showToast(msg: "Account created successfully");
 
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => Mainpage()));
+            context, MaterialPageRoute(builder: (context) => ProfilePhotoScreen()));
       }
     } catch (e, stacktrace) {
       print("Registration error: $e");
@@ -185,7 +185,7 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: 10),
               SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: ElevatedButton(

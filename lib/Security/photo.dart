@@ -1,13 +1,11 @@
 import 'dart:typed_data';
-import 'package:facebok/Pages/mainpage.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-
+import 'package:facebok/Pages/mainpage.dart';
 
 class ProfilePhotoScreen extends StatefulWidget {
   @override
@@ -29,32 +27,30 @@ class _ProfilePhotoScreenState extends State<ProfilePhotoScreen> {
         quality: 70,
       );
       if (compressed != null) {
-        setState(() => imageBytes = Uint8List.fromList(compressed));
-        await uploadToFirebase(imageBytes!);
+        final Uint8List imageData = Uint8List.fromList(compressed);
+        final String base64Image = base64Encode(imageData);
+
+        setState(() => imageBytes = imageData);
+        await uploadToFirestore(base64Image);
       }
     }
   }
 
-  Future<void> uploadToFirebase(Uint8List imageData) async {
+  Future<void> uploadToFirestore(String base64Image) async {
     try {
       setState(() => isLoading = true);
       final user = _auth.currentUser;
       if (user == null) return;
 
-      final storageRef =
-      FirebaseStorage.instance.ref().child('profile_photos/${user.uid}.jpg');
-      await storageRef.putData(imageData);
-      final imageUrl = await storageRef.getDownloadURL();
-
-      await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
-        'photoUrl': imageUrl,
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+        'ppimage': base64Image,
         'hasUploadedPhoto': true,
         'profileStep': 2,
         'updatedAt': FieldValue.serverTimestamp(),
-      });
+      }, SetOptions(merge: true));
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Profile photo uploaded successfully!')),
+        SnackBar(content: Text('Profile photo uploaded to database!')),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -64,6 +60,7 @@ class _ProfilePhotoScreenState extends State<ProfilePhotoScreen> {
       setState(() => isLoading = false);
     }
   }
+
   void showImageSourceSelector() {
     showModalBottomSheet(
       context: context,
@@ -98,11 +95,11 @@ class _ProfilePhotoScreenState extends State<ProfilePhotoScreen> {
     final user = _auth.currentUser;
     if (user == null) return;
 
-    await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+    await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
       'hasUploadedPhoto': !skipped,
       'profileStep': 2,
       'updatedAt': FieldValue.serverTimestamp(),
-    });
+    }, SetOptions(merge: true));
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(skipped ? 'Profile skipped!' : 'Profile updated!')),
@@ -126,9 +123,7 @@ class _ProfilePhotoScreenState extends State<ProfilePhotoScreen> {
         child: ClipOval(
           child: imageBytes != null
               ? Image.memory(imageBytes!, fit: BoxFit.cover)
-              : Center(
-            child: Icon(Icons.camera_alt, size: 40, color: Colors.grey),
-          ),
+              : Center(child: Icon(Icons.camera_alt, size: 40, color: Colors.grey)),
         ),
       ),
     );
@@ -146,8 +141,7 @@ class _ProfilePhotoScreenState extends State<ProfilePhotoScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text('Add Your Photo',
-                style:
-                TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
             SizedBox(height: 10),
             Text('Upload a profile picture to complete your account',
                 textAlign: TextAlign.center,
@@ -162,28 +156,34 @@ class _ProfilePhotoScreenState extends State<ProfilePhotoScreen> {
             ),
             SizedBox(height: 40),
             ElevatedButton(
-              onPressed: (
-                  ) {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>Mainpage()));
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Mainpage(0,false)));
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.pink,
-                padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                backgroundColor: Colors.blueAccent.shade700,
+                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: Text('Complete Profile',
-                  style: TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold)),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 30, right: 30),
+                child: Text('Complete Profile',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold,color: Colors.white)),
+              ),
             ),
             SizedBox(height: 12),
             TextButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>Mainpage()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Mainpage(0,false)));
               },
-              child: Text('Skip',
-                  style: TextStyle(fontSize: 15, color: Colors.grey[600])),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10),
+                child: Text('Skip',
+                    style: TextStyle(fontSize: 15, color: Colors.grey[600])),
+              ),
             ),
           ],
         ),

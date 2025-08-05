@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:convert';
+import 'dart:typed_data';
 
 class friends extends StatefulWidget {
   const friends({super.key});
@@ -10,25 +13,42 @@ class friends extends StatefulWidget {
 
 class _friendsState extends State<friends> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   List<Map<String, dynamic>> users = [];
+  late String currentUserUid;
 
   @override
   void initState() {
     super.initState();
+    currentUserUid = _auth.currentUser!.uid;
     fetchUsers();
   }
 
   Future<void> fetchUsers() async {
     try {
+      final currentUserDoc =
+      await _firestore.collection("users").doc(currentUserUid).get();
+
+      final currentData = currentUserDoc.data();
+      final friendsList = currentData != null
+          ? List<String>.from(currentData['friends'] ?? [])
+          : [];
+
       final snapshot = await _firestore.collection("users").get();
-      final fetched = snapshot.docs.map((doc) {
+
+      final fetched = snapshot.docs
+          .where((doc) => doc.id != currentUserUid)
+          .map((doc) {
         final data = doc.data();
+        final uid = doc.id;
+        final isFriend = friendsList.contains(uid);
         return {
-          'uid': doc.id,
-          'name': data['fname'] ?? '', // ✅ corrected key
-          'imageUrl': data['imageUrl'] ?? '',
-          'isFriend': data['isFriend'] ?? false,
+          'uid': uid,
+          'name': data['fname'] ?? '',
+          'ppimage': data['ppimage'] as String? ?? '',
           'mutuals': List<String>.from(data['mutuals'] ?? []),
+          'isFriend': isFriend,
         };
       }).toList();
 
@@ -41,13 +61,40 @@ class _friendsState extends State<friends> {
   }
 
   Future<void> addFriend(String uid) async {
-    await _firestore.collection("users").doc(uid).update({'isFriend': true});
+    await _firestore.collection("users").doc(currentUserUid).update({
+      'friends': FieldValue.arrayUnion([uid])
+    });
     fetchUsers();
   }
 
   Future<void> removeFriend(String uid) async {
-    await _firestore.collection("users").doc(uid).update({'isFriend': false});
+    await _firestore.collection("users").doc(currentUserUid).update({
+      'friends': FieldValue.arrayRemove([uid])
+    });
     fetchUsers();
+  }
+
+  Widget buildProfileImage(String? ppimage) {
+    try {
+      if (ppimage != null && ppimage.isNotEmpty) {
+        final imageBytes = base64Decode(ppimage);
+        return CircleAvatar(
+          radius: 30,
+          backgroundImage: MemoryImage(imageBytes),
+        );
+      } else {
+        return const CircleAvatar(
+          radius: 30,
+          child: Icon(Icons.person, size: 30),
+        );
+      }
+    } catch (e) {
+      print('⚠️ Error decoding ppimage: $e');
+      return const CircleAvatar(
+        radius: 30,
+        child: Icon(Icons.person, size: 30),
+      );
+    }
   }
 
   Widget buildMutualAvatars(List<String> mutuals) {
@@ -84,6 +131,8 @@ class _friendsState extends State<friends> {
           itemBuilder: (context, index) {
             final user = users[index];
             final mutuals = user['mutuals'] as List<String>;
+            final isFriend = user['isFriend'] as bool;
+            final ppimage = user['ppimage'] as String?;
 
             return Card(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -96,15 +145,7 @@ class _friendsState extends State<friends> {
                   children: [
                     Row(
                       children: [
-                        CircleAvatar(
-                          radius: 30,
-                          backgroundImage: user['imageUrl'].isNotEmpty
-                              ? NetworkImage(user['imageUrl'])
-                              : null,
-                          child: user['imageUrl'].isEmpty
-                              ? const Icon(Icons.person, size: 30)
-                              : null,
-                        ),
+                        buildProfileImage(ppimage),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Column(
@@ -112,8 +153,7 @@ class _friendsState extends State<friends> {
                             children: [
                               Text(user['name'],
                                   style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16)),
+                                      fontWeight: FontWeight.bold, fontSize: 16)),
                               if (mutuals.isNotEmpty)
                                 Padding(
                                   padding: const EdgeInsets.only(top: 6),
@@ -125,10 +165,8 @@ class _friendsState extends State<friends> {
                                         child: buildMutualAvatars(mutuals),
                                       ),
                                       const SizedBox(width: 8),
-                                      Text(
-                                        "${mutuals.length} mutual friends",
-                                        style: const TextStyle(fontSize: 12),
-                                      )
+                                      Text("${mutuals.length} mutual friends",
+                                          style: const TextStyle(fontSize: 12))
                                     ],
                                   ),
                                 ),
@@ -150,18 +188,19 @@ class _friendsState extends State<friends> {
                           ),
                         ),
                         const SizedBox(width: 10),
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () => removeFriend(user['uid']),
-                            child: const Text("Remove"),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.grey.shade300,
-                              foregroundColor: Colors.black,
+                        if (isFriend)
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () => removeFriend(user['uid']),
+                              child: const Text("Remove"),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.grey.shade300,
+                                foregroundColor: Colors.black,
+                              ),
                             ),
                           ),
-                        ),
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),

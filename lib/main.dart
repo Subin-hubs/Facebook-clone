@@ -5,7 +5,7 @@ import 'Pages/HOME/Home_page.dart';
 import 'Pages/MENU/morepage.dart';
 import 'Pages/chat/chatspage.dart';
 import 'Pages/FRIENDS/friendpage.dart';
-import 'Pages/mainpage.dart' hide HomePageContent;
+import 'Pages/mainpage.dart';
 import 'Security/1sign.dart';
 import 'Security/forgetpassword.dart';
 import 'Security/photo.dart';
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
 
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: Mainpage(),
+      home: loginPage(),
     );
   }
 }

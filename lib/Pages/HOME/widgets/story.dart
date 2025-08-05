@@ -13,7 +13,7 @@ class StoryWidget extends StatefulWidget {
     super.key,
     required this.userId,
     required this.userName,
-    required this.profileUrl,
+    required this.profileUrl, required image, required ppimage,
   });
 
   @override
