@@ -12,7 +12,7 @@ import '../Pages/HOME/Home_page.dart';
 import '../Pages/mainpage.dart';
 
 class loginPage extends StatefulWidget {
-  const loginPage({super.key});
+   loginPage({super.key});
 
   @override
   State<loginPage> createState() => _loginPageState();
@@ -65,6 +65,7 @@ class _loginPageState extends State<loginPage> {
       }
 
       return user;
+
     } catch (e, stacktrace) {
       print("Login Error: $e");
       print("StackTrace: $stacktrace");
@@ -82,15 +83,15 @@ class _loginPageState extends State<loginPage> {
     return Scaffold(
       backgroundColor: CupertinoColors.white,
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding:  EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 100),
+             SizedBox(height: 100),
             Center(
               child: Image.asset("assests/facebookicon.png", height: 60, width: 60),
             ),
-            const SizedBox(height: 90),
+             SizedBox(height: 90),
             TextFormField(
               controller: emailController,
               decoration: InputDecoration(
@@ -99,15 +100,16 @@ class _loginPageState extends State<loginPage> {
                 fillColor: Colors.grey.shade100,
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
-                  borderSide: const BorderSide(color: Colors.grey),
+                  borderSide:  BorderSide(color: Colors.grey),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
-                  borderSide: const BorderSide(color: Colors.grey),
+                  borderSide:  BorderSide(color: Colors.grey),
                 ),
               ),
             ),
-            const SizedBox(height: 10),
+             SizedBox(height: 10),
+
             TextFormField(
               controller: passwordController,
               obscureText: true,
@@ -117,15 +119,15 @@ class _loginPageState extends State<loginPage> {
                 fillColor: Colors.grey.shade100,
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
-                  borderSide: const BorderSide(color: Colors.grey),
+                  borderSide:  BorderSide(color: Colors.grey),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
-                  borderSide: const BorderSide(color: Colors.grey),
+                  borderSide:  BorderSide(color: Colors.grey),
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+             SizedBox(height: 20),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -138,11 +140,11 @@ class _loginPageState extends State<loginPage> {
                   ),
                 ),
                 child: isLoading
-                    ? const Padding(
+                    ?  Padding(
                   padding: EdgeInsets.symmetric(vertical: 12),
                   child: CircularProgressIndicator(color: Colors.white),
                 )
-                    : const Padding(
+                    :  Padding(
                   padding: EdgeInsets.symmetric(vertical: 12),
                   child: Text(
                     "Log in",
@@ -154,9 +156,9 @@ class _loginPageState extends State<loginPage> {
             Center(
               child: TextButton(
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const forgetPassword()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) =>  forgetPassword()));
                 },
-                child: const Text(
+                child:  Text(
                   "Forgot password?",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
@@ -168,17 +170,17 @@ class _loginPageState extends State<loginPage> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const SignupPage()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) =>  SignupPage()));
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
-                      side: const BorderSide(color: Colors.blueAccent),
+                      side:  BorderSide(color: Colors.blueAccent),
                     ),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    padding:  EdgeInsets.symmetric(vertical: 12),
                     child: Text(
                       "Create new account",
                       style: TextStyle(
@@ -190,8 +192,8 @@ class _loginPageState extends State<loginPage> {
                 ),
               ),
             ),
-            const SizedBox(height: 10),
-            const Center(child: Text("Meta", style: TextStyle(color: Colors.grey))),
+             SizedBox(height: 10),
+             Center(child: Text("Meta", style: TextStyle(color: Colors.grey))),
           ],
         ),
       ),

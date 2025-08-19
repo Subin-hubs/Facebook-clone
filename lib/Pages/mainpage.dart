@@ -34,7 +34,7 @@ class _MainpageState extends State<Mainpage> {
   }
   final List<Widget> pages = const [
     HomePages(),
-    reels(),
+    Reels(),
     friends(),
     marketplace(),
     notificatation(),

@@ -8,6 +8,8 @@ import 'package:facebok/Security/login_page.dart';
 import 'package:facebok/Pages/HOME/Home_page.dart';
 import 'package:facebok/Pages/REELS/Reels.dart';
 
+import 'ProfilePage.dart';
+
 class more extends StatefulWidget {
   const more({super.key});
 
@@ -73,35 +75,42 @@ class _moreState extends State<more> {
               SizedBox(height: 24),
 
               // 🙍‍♂️ User Profile Info
-              Row(
-                children: [
-                  CircleAvatar(
-                    radius: 28,
-                    backgroundImage: userData!['ppimage'] != null
-                        ? MemoryImage(base64Decode(userData!['ppimage']))
-                        : AssetImage("assests/defaultimg.png") as ImageProvider,
-                  ),
-                  SizedBox(width: 12),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "${userData!['fname'] ?? 'First'} ${userData!['lname'] ?? 'Last'}",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
+              GestureDetector(
+
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>ProfileScreen()));
+                }
+              ,
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 28,
+                      backgroundImage: userData!['ppimage'] != null
+                          ? MemoryImage(base64Decode(userData!['ppimage']))
+                          : AssetImage("assests/defaultimg.png") as ImageProvider,
+                    ),
+                    SizedBox(width: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "${userData!['fname'] ?? 'First'} ${userData!['lname'] ?? 'Last'}",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ),
-                      Text(
-                        "View your profile",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[600],
+                        Text(
+                          "View your profile",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[600],
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
               SizedBox(height: 30),
 

@@ -2,11 +2,11 @@ import 'package:facebok/Security/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'Pages/HOME/Home_page.dart';
+import 'Pages/MENU/ProfilePage.dart';
 import 'Pages/MENU/morepage.dart';
-import 'Pages/chat/chatspage.dart';
 import 'Pages/FRIENDS/friendpage.dart';
 import 'Pages/mainpage.dart';
-import 'Security/1sign.dart';
+import 'Security/backgroundIamge.dart';
 import 'Security/forgetpassword.dart';
 import 'Security/photo.dart';
 import 'Security/signupPage.dart';
@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
 

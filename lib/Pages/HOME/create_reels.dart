@@ -7,14 +7,15 @@ import 'package:image_picker/image_picker.dart';
 
 import '../mainpage.dart';
 
-class CreatePost extends StatefulWidget {
-  const CreatePost({super.key});
+
+class CreateReels extends StatefulWidget {
+  const CreateReels({super.key});
 
   @override
-  State<CreatePost> createState() => _CreatePostState();
+  State<CreateReels> createState() => _CreateReelsState();
 }
 
-class _CreatePostState extends State<CreatePost> {
+class _CreateReelsState extends State<CreateReels> {
   final TextEditingController _descriptionController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -39,7 +40,7 @@ class _CreatePostState extends State<CreatePost> {
     }
   }
 
-  // 🧠 Save post to Firestore under users/{uid}/posts/{autoId}
+
   Future<void> addPost(String description, String? imageData) async {
     final user = _auth.currentUser;
     if (user == null) return;
@@ -47,7 +48,7 @@ class _CreatePostState extends State<CreatePost> {
     final postsRef = _firestore
         .collection('users')
         .doc(user.uid)
-        .collection('posts')
+        .collection('reels')
         .doc();
 
     await postsRef.set({
@@ -60,20 +61,20 @@ class _CreatePostState extends State<CreatePost> {
     });
   }
 
-  // 🔘 Called when "Post" is pressed
+
   Future<void> handlePost() async {
     final description = _descriptionController.text.trim();
 
     if (description.isEmpty && base64Image == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Post cannot be empty")),
+        SnackBar(content: Text("Reels cannot be empty")),
       );
       return;
     }
 
     await addPost(description, base64Image);
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Post uploaded successfully")),
+      SnackBar(content: Text("Reels uploaded successfully")),
     );
 
     Navigator.pushReplacement(
@@ -85,7 +86,7 @@ class _CreatePostState extends State<CreatePost> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Create Post"),
+          title: const Text("Create Reels"),
           centerTitle: true,
           leading: IconButton(
             icon: Icon(Icons.close),
@@ -109,7 +110,7 @@ class _CreatePostState extends State<CreatePost> {
                 controller: _descriptionController,
                 maxLines: 4,
                 decoration: const InputDecoration(
-                  hintText: "What's on your mind?",
+                  hintText: "Description",
                   border: OutlineInputBorder(),
                 ),
               ),

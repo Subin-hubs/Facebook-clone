@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:facebok/Pages/mainpage.dart';
 import 'package:facebok/Security/login_page.dart';
 import 'package:facebok/Security/photo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import '../Pages/HOME/Home_page.dart';
+
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -57,12 +56,13 @@ class _SignupPageState extends State<SignupPage> {
     }
   }
 
-  // 👤 Register new user
+
   Future<void> registeruser() async {
     try {
       final UserCredential userCredential =
       await _auth.createUserWithEmailAndPassword(
           email: email.text, password: password.text);
+
 
       final User? user = userCredential.user;
       if (user != null) {
@@ -115,6 +115,7 @@ class _SignupPageState extends State<SignupPage> {
                           borderRadius: BorderRadius.circular(20),
                           borderSide: const BorderSide(color: Colors.grey),
                         ),
+                        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(20),)
                       ),
                     ),
                   ),
@@ -127,7 +128,7 @@ class _SignupPageState extends State<SignupPage> {
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        border: const OutlineInputBorder(),
+                        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(20))
                       ),
                     ),
                   ),

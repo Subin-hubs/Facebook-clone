@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 import 'dart:convert';
-import 'package:facebok/Security/backgroundIamge.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -8,12 +7,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:facebok/Pages/mainpage.dart';
 
-class ProfilePhotoScreen extends StatefulWidget {
+class backgroundImage extends StatefulWidget {
   @override
-  _ProfilePhotoScreenState createState() => _ProfilePhotoScreenState();
+  _backgroundImageState createState() => _backgroundImageState();
 }
 
-class _ProfilePhotoScreenState extends State<ProfilePhotoScreen> {
+class _backgroundImageState extends State<backgroundImage> {
   Uint8List? imageBytes;
   bool isLoading = false;
   final _auth = FirebaseAuth.instance;
@@ -44,14 +43,14 @@ class _ProfilePhotoScreenState extends State<ProfilePhotoScreen> {
       if (user == null) return;
 
       await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-        'ppimage': base64Image,
+        'baclgroundImage': base64Image,
         'hasUploadedPhoto': true,
-        'profileStep': 2,
+        'profileStep': 3,
         'updatedAt': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Profile photo uploaded to database!')),
+        SnackBar(content: Text('Background photo uploaded to database!')),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -98,7 +97,7 @@ class _ProfilePhotoScreenState extends State<ProfilePhotoScreen> {
 
     await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
       'hasUploadedPhoto': !skipped,
-      'profileStep': 2,
+      'profileStep': 3,
       'updatedAt': FieldValue.serverTimestamp(),
     }, SetOptions(merge: true));
 
@@ -141,17 +140,17 @@ class _ProfilePhotoScreenState extends State<ProfilePhotoScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Add Your Photo',
+            Text('Add Your Background Image',
                 style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
             SizedBox(height: 10),
-            Text('Upload a profile picture to complete your account',
+            Text('Upload a Background picture to complete your account',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 16, color: Colors.grey[700])),
             SizedBox(height: 40),
             buildImageCircle(),
             SizedBox(height: 20),
             Text(
-              'Upload a clear photo of yourself. This helps others recognize you.',
+              'Upload a photo highlight yourself.',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 14, color: Colors.grey[600]),
             ),
@@ -159,7 +158,7 @@ class _ProfilePhotoScreenState extends State<ProfilePhotoScreen> {
             ElevatedButton(
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => backgroundImage()));
+                    MaterialPageRoute(builder: (context) => Mainpage(0,false)));
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blueAccent.shade700,
@@ -178,7 +177,7 @@ class _ProfilePhotoScreenState extends State<ProfilePhotoScreen> {
             TextButton(
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => backgroundImage()));
+                    MaterialPageRoute(builder: (context) => Mainpage(0,false)));
               },
               child: Padding(
                 padding: const EdgeInsets.only(left: 10, right: 10),

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:facebok/Pages/MARKET/productDetail.dart';
 import 'package:flutter/material.dart';
 import 'package:facebok/Pages/MARKET/seller.dart';
 
@@ -61,10 +62,30 @@ class _marketplaceState extends State<marketplace> {
                 ],
               ),
             ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: Text("Today's picks",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 12),),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 12),
+                  child: Row(
+                    children: [
+                      Image.asset("assests/locatation.png",height: 20,width: 20,),
+                      Text("Kathmandu",style: TextStyle(color: Colors.blueAccent.shade700,fontSize: 12),)
+                    ],
+                  ),
+                )
+                
+                
+              ],
+            ),
 
-            const SizedBox(height: 10),
 
-            // 🛍️ Marketplace Grid
+            // 🛍 Marketplace Grid
             Expanded(
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
@@ -100,7 +121,17 @@ class _marketplaceState extends State<marketplace> {
 
                       return GestureDetector(
                         onTap: () {
-                          // 🔜 Add detailed view if needed
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => productDetail(
+                                name: data['name'] ?? '',
+                                price: data['price']?.toString() ?? '',
+                                description: data['description'] ?? '',
+                                image: data['image'] ?? '',
+                              ),
+                            ),
+                          );
                         },
                         child: Card(
                           shape: RoundedRectangleBorder(
@@ -138,7 +169,7 @@ class _marketplaceState extends State<marketplace> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      data['name'] ?? 'No name', // ✅ use lowercase 'name'
+                                      data['name'] ?? 'No name',
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold, fontSize: 14),
                                       maxLines: 1,
@@ -146,15 +177,15 @@ class _marketplaceState extends State<marketplace> {
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
-                                      "₹ ${data['price'] ?? 'N/A'}", // ✅ lowercase 'price'
+                                      "₹ ${data['price'] ?? 'N/A'}",
                                       style: TextStyle(
                                           color: Colors.green.shade700,
                                           fontWeight: FontWeight.bold),
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
-                                      data['description'] ?? '', // ✅ lowercase 'description'
-                                      maxLines: 2,
+                                      data['description'] ?? '',
+                                      maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: const TextStyle(fontSize: 12),
                                     ),
