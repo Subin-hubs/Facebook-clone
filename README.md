@@ -28,22 +28,22 @@ Responsive UI: Works on both Android and iOS devices.
 ## Screenshots
 
 ### Home Screen
-![Home Screen](assets/ss/home.png)
+![Home Screen](assests/ss/home.png)
 
 ### Friends Screen
-![Friends Screen](assets/ss/friends.png)
+![Friends Screen](assests/ss/friends.png)
 
 ### Marketplace Screen
-![Marketplace Screen](assets/ss/marketplace.png)
+![Marketplace Screen](assests/ss/marketplace.png)
 
 ### Menu Screen
-![Menu Screen](assets/ss/menu.png)
+![Menu Screen](assests/ss/menu.png)
 
 ### Notification Screen
-![Notification Screen](assets/ss/notification.png)
+![Notification Screen](assests/ss/notification.png)
 
 ### Reels / Posts Screen
-![Reels Screen](assets/ss/reels.png)
+![Reels Screen](assests/ss/reels.png)
 
 Tech Stack
 Flutter – Cross-platform mobile development
