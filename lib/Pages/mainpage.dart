@@ -37,7 +37,7 @@ class _MainpageState extends State<Mainpage> {
     Reels(),
     friends(),
     marketplace(),
-    notificatation(),
+    NotificationPage(),
     more(),
   ];
 

@@ -655,7 +655,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   .collection('users')
                   .doc(widget.userId ?? currentUserId!)
                   .collection('posts')
-                  .orderBy('createdAt', descending: true)
+                  .orderBy('timestamp', descending: true)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
@@ -724,7 +724,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   .collection('users')
                   .doc(widget.userId ?? currentUserId!)
                   .collection('reels')
-                  .orderBy('createdAt', descending: true)
+                  .orderBy('timestamp', descending: true)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
