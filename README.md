@@ -1,16 +1,53 @@
-# facebok
+Facebook Clone Flutter App
 
-A new Flutter project.
+A fully functional Facebook-style social media app built with Flutter and Firebase, featuring user authentication, posts with images, cover photo edits, profile customization, and more. Inspired by the simplicity and interactivity of Facebook, this app allows users to connect, share, and engage seamlessly.
 
-## Getting Started
+Features
 
-This project is a starting point for a Flutter application.
+User Authentication: Sign up, log in, and log out using Firebase Authentication.
 
-A few resources to get you started if this is your first Flutter project:
+Profile Management:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Edit profile picture and cover photo.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Add basic personal info (optional).
+
+Posts:
+
+Upload images with posts.
+
+Social Feed:
+
+Scrollable feed displaying posts from all users.
+Like and comment functionalities .
+
+Realtime Updates: All data stored in Firebase Firestore and updated in real-time.
+
+Responsive UI: Works on both Android and iOS devices.
+
+## Screenshots
+
+### Home Screen
+![Home Screen](assets/ss/home.png)
+
+### Friends Screen
+![Friends Screen](assets/ss/friends.png)
+
+### Marketplace Screen
+![Marketplace Screen](assets/ss/marketplace.png)
+
+### Menu Screen
+![Menu Screen](assets/ss/menu.png)
+
+### Notification Screen
+![Notification Screen](assets/ss/notification.png)
+
+### Reels / Posts Screen
+![Reels Screen](assets/ss/reels.png)
+
+Tech Stack
+Flutter – Cross-platform mobile development
+Firebase Auth – User authentication
+Cloud Firestore – Real-time database
+Firebase Storage – Store images and cover photos
+Dart – Programming language
